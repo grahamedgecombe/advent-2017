@@ -2,6 +2,7 @@ package com.grahamedgecombe.advent2017;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,16 +17,11 @@ public final class Day2 {
 		int checksum = 0;
 
 		for (String row : rows) {
-			int min = Integer.MAX_VALUE;
-			int max = Integer.MIN_VALUE;
+			IntSummaryStatistics s = Arrays.stream(row.split("\t"))
+				.mapToInt(Integer::parseInt)
+				.summaryStatistics();
 
-			for (String col : row.split("\t")) {
-				int v = Integer.parseInt(col);
-				min = Math.min(min, v);
-				max = Math.max(max, v);
-			}
-
-			checksum += max - min;
+			checksum += s.getMax() - s.getMin();
 		}
 
 		return checksum;
@@ -35,7 +31,9 @@ public final class Day2 {
 		int checksum = 0;
 
 		for (String row : rows) {
-			List<Integer> cols = Arrays.stream(row.split("\t")).map(Integer::parseInt).collect(Collectors.toList());
+			List<Integer> cols = Arrays.stream(row.split("\t"))
+				.map(Integer::parseInt)
+				.collect(Collectors.toList());
 
 			next_row: for (int i = 0; i < cols.size(); i++) {
 				for (int j = 0; j < i; j++) {
