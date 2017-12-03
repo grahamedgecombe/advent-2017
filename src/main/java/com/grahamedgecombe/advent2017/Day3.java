@@ -1,11 +1,14 @@
 package com.grahamedgecombe.advent2017;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Day3 {
 	public static void main(String[] args) throws IOException {
 		int square = Integer.parseInt(AdventUtils.readString("day3.txt"));
 		System.out.println(steps(square));
+		System.out.println(sumLargerThan(square));
 	}
 
 	public static int steps(int square) {
@@ -41,5 +44,77 @@ public final class Day3 {
 		}
 
 		return Math.abs(x) + Math.abs(y);
+	}
+
+	public static int sumLargerThan(int in) {
+		Map<Position, Integer> squares = new HashMap<>();
+		Position pos = new Position(0, 0);
+		squares.put(pos, 1);
+
+		int radius = 1;
+
+		for (;;) {
+			/* right */
+			for (int i = 0; i < radius; i++) {
+				pos = pos.right();
+
+				int v = pos.adjacent()
+					.mapToInt(p -> squares.getOrDefault(p, 0))
+					.sum();
+
+				if (v > in) {
+					return v;
+				}
+
+				squares.put(pos, v);
+			}
+
+			/* up */
+			for (int i = 0; i < radius; i++) {
+				pos = pos.up();
+
+				int v = pos.adjacent()
+					.mapToInt(p -> squares.getOrDefault(p, 0))
+					.sum();
+
+				if (v > in) {
+					return v;
+				}
+
+				squares.put(pos, v);
+			}
+
+			/* left */
+			for (int i = 0; i <= radius; i++) {
+				pos = pos.left();
+
+				int v = pos.adjacent()
+					.mapToInt(p -> squares.getOrDefault(p, 0))
+					.sum();
+
+				if (v > in) {
+					return v;
+				}
+
+				squares.put(pos, v);
+			}
+
+			/* down */
+			for (int i = 0; i <= radius; i++) {
+				pos = pos.down();
+
+				int v = pos.adjacent()
+					.mapToInt(p -> squares.getOrDefault(p, 0))
+					.sum();
+
+				if (v > in) {
+					return v;
+				}
+
+				squares.put(pos, v);
+			}
+
+			radius += 2;
+		}
 	}
 }
