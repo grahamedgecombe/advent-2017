@@ -3,9 +3,9 @@ package com.grahamedgecombe.advent2017;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class Day6 {
@@ -13,12 +13,24 @@ public final class Day6 {
 		List<Integer> banks = Arrays.stream(AdventUtils.readString("day6.txt").split("\t"))
 			.map(Integer::parseInt)
 			.collect(Collectors.toList());
-		System.out.println(reallocate(banks));
+		System.out.println(reallocatePart1(banks));
+		System.out.println(reallocatePart2(banks));
 	}
 
-	public static int reallocate(List<Integer> banks) {
-		Set<List<Integer>> seen = new HashSet<>();
+	public static int reallocatePart1(List<Integer> banks) {
+		return reallocate(banks, true);
+	}
+
+	public static int reallocatePart2(List<Integer> banks) {
+		return reallocate(banks, false);
+	}
+
+	private static int reallocate(List<Integer> banks, boolean part1) {
+		banks = new ArrayList<>(banks);
+
+		Map<List<Integer>, Integer> seen = new HashMap<>();
 		int count = 0;
+		Integer firstSeen;
 
 		do {
 			int maxBank = 0;
@@ -46,8 +58,13 @@ public final class Day6 {
 			}
 
 			count++;
-		} while (seen.add(new ArrayList<>(banks)));
+			firstSeen = seen.put(banks, count);
+		} while (firstSeen == null);
 
-		return count;
+		if (part1) {
+			return count;
+		} else {
+			return count - firstSeen;
+		}
 	}
 }

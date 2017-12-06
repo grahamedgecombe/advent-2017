@@ -9,6 +9,11 @@ import static org.junit.Assert.assertEquals;
 public final class Day6Test {
 	@Test
 	public void testPart1() {
-		assertEquals(5, Day6.reallocate(Arrays.asList(0, 2, 7, 0)));
+		assertEquals(5, Day6.reallocatePart1(Arrays.asList(0, 2, 7, 0)));
+	}
+
+	@Test
+	public void testPart2() {
+		assertEquals(4, Day6.reallocatePart2(Arrays.asList(0, 2, 7, 0)));
 	}
 }
