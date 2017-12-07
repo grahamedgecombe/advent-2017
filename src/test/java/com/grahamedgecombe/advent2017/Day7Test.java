@@ -2,14 +2,17 @@ package com.grahamedgecombe.advent2017;
 
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public final class Day7Test {
-	@Test
-	public void testPart1() {
-		Day7.Program root = Day7.readDiscs(Arrays.asList(
+	private Day7.Program root;
+
+	@Before
+	public void setUp() {
+		root = Day7.readDiscs(Arrays.asList(
 			"pbga (66)",
 			"xhth (57)",
 			"ebii (61)",
@@ -24,6 +27,15 @@ public final class Day7Test {
 			"gyxo (61)",
 			"cntj (57)"
 		));
+	}
+
+	@Test
+	public void testPart1() {
 		assertEquals("tknk", root.getName());
+	}
+
+	@Test
+	public void testPart2() {
+		assertEquals(60, root.balance());
 	}
 }
