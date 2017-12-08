@@ -104,6 +104,7 @@ public final class Day8 {
 	public static final class Machine {
 		private final List<Instruction> instructions;
 		private final Map<String, Integer> registers;
+		private int maxValue;
 
 		public Machine(List<Instruction> instructions) {
 			this.instructions = instructions;
@@ -111,24 +112,34 @@ public final class Day8 {
 		}
 
 		public void evaluate() {
+			registers.clear();
+
 			for (Instruction instruction : instructions) {
 				instruction.evaluate(registers);
+				maxValue = Math.max(maxValue, registers.getOrDefault(instruction.register, 0));
 			}
 		}
 
-		public int getMaxRegister() {
+		public int getMaxFinalRegister() {
 			return registers.values()
 				.stream()
 				.mapToInt(v -> v)
 				.max()
 				.orElseThrow(IllegalStateException::new);
 		}
+
+		public int getMaxIntermediateRegister() {
+			return maxValue;
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		Machine instructions = readInstructions(AdventUtils.readLines("day8.txt"));
 		instructions.evaluate();
-		System.out.println(instructions.getMaxRegister());
+		System.out.println(instructions.getMaxFinalRegister());
+
+		instructions.evaluate();
+		System.out.println(instructions.getMaxIntermediateRegister());
 	}
 
 	public static Machine readInstructions(List<String> lines) {
