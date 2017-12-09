@@ -16,4 +16,15 @@ public final class Day9Test {
 		assertEquals(9, Day9.score("{{<!!>},{<!!>},{<!!>},{<!!>}}"));
 		assertEquals(3, Day9.score("{{<a!>},{<a!>},{<a!>},{<ab>}}"));
 	}
+
+	@Test
+	public void testPart2() {
+		assertEquals(0, Day9.garbageChars("<>"));
+		assertEquals(17, Day9.garbageChars("<random characters>"));
+		assertEquals(3, Day9.garbageChars("<<<<>"));
+		assertEquals(2, Day9.garbageChars("<{!>}>"));
+		assertEquals(0, Day9.garbageChars("<!!>"));
+		assertEquals(0, Day9.garbageChars("<!!!>>"));
+		assertEquals(10, Day9.garbageChars("<{o\"i!a,<{i<a>"));
+	}
 }

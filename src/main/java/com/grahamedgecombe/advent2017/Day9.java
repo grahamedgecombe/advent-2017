@@ -6,10 +6,21 @@ public final class Day9 {
 	public static void main(String[] args) throws IOException {
 		String chars = AdventUtils.readString("day9.txt");
 		System.out.println(score(chars));
+		System.out.println(garbageChars(chars));
 	}
 
 	public static int score(String chars) {
+		return parse(chars, true);
+	}
+
+	public static int garbageChars(String chars) {
+		return parse(chars, false);
+	}
+
+	private static int parse(String chars, boolean part1) {
 		int score = 0;
+		int garbageChars = 0;
+
 		int depth = 0;
 		boolean garbage = false;
 		boolean ignore = false;
@@ -25,6 +36,9 @@ public final class Day9 {
 							break;
 						case '!':
 							ignore = true;
+							break;
+						default:
+							garbageChars++;
 							break;
 					}
 				}
@@ -53,6 +67,10 @@ public final class Day9 {
 			}
 		}
 
-		return score;
+		if (part1) {
+			return score;
+		} else {
+			return garbageChars;
+		}
 	}
 }
