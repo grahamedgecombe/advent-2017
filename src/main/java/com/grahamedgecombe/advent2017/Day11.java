@@ -5,11 +5,20 @@ import java.io.IOException;
 public final class Day11 {
 	public static void main(String[] args) throws IOException {
 		String[] steps = AdventUtils.readString("day11.txt").split(",");
-		System.out.println(getDistance(steps));
+		System.out.println(getFinalDistance(steps));
+		System.out.println(getMaxDistance(steps));
 	}
 
-	public static int getDistance(String[] steps) {
-		int q = 0, r = 0;
+	public static int getFinalDistance(String[] steps) {
+		return getDistance(steps, true);
+	}
+
+	public static int getMaxDistance(String[] steps) {
+		return getDistance(steps, false);
+	}
+
+	private static int getDistance(String[] steps, boolean part1) {
+		int q = 0, r = 0, maxDistance = 0;
 
 		for (String step : steps) {
 			switch (step) {
@@ -36,8 +45,16 @@ public final class Day11 {
 				default:
 					throw new IllegalArgumentException();
 			}
+
+			int distance = Math.max(Math.max(Math.abs(q), Math.abs(r)), Math.abs(-q - r));
+			maxDistance = Math.max(maxDistance, distance);
 		}
 
-		return Math.max(Math.max(Math.abs(q), Math.abs(r)), Math.abs(-q - r));
+		int finalDistance = Math.max(Math.max(Math.abs(q), Math.abs(r)), Math.abs(-q - r));
+		if (part1) {
+			return finalDistance;
+		} else {
+			return maxDistance;
+		}
 	}
 }
