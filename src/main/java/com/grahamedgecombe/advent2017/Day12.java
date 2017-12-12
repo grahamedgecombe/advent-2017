@@ -41,11 +41,12 @@ public final class Day12 {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Pipe root = readPipes(AdventUtils.readLines("day12.txt"));
-		System.out.println(count(root));
+		Map<Integer, Pipe> pipes = readPipes(AdventUtils.readLines("day12.txt"));
+		System.out.println(count(pipes));
+		System.out.println(groups(pipes));
 	}
 
-	public static Pipe readPipes(List<String> lines) {
+	public static Map<Integer, Pipe> readPipes(List<String> lines) {
 		Map<Integer, Pipe> pipes = new HashMap<>();
 
 		for (String line : lines) {
@@ -68,7 +69,7 @@ public final class Day12 {
 			}
 		}
 
-		return pipes.get(0);
+		return pipes;
 	}
 
 	private static int count(Pipe root, Set<Pipe> seen) {
@@ -84,7 +85,25 @@ public final class Day12 {
 		return count;
 	}
 
-	public static int count(Pipe root) {
+	public static int count(Map<Integer, Pipe> pipes) {
+		Pipe root = pipes.get(0);
 		return count(root, new HashSet<>());
+	}
+
+	public static int groups(Map<Integer, Pipe> pipes) {
+		int groups = 0;
+		Set<Pipe> remaining = new HashSet<>(pipes.values());
+
+		while (!remaining.isEmpty()) {
+			Pipe root = remaining.iterator().next();
+
+			Set<Pipe> seen = new HashSet<>();
+			count(root, seen);
+			remaining.removeAll(seen);
+
+			groups++;
+		}
+
+		return groups;
 	}
 }
