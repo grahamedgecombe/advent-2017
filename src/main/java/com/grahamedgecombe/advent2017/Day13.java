@@ -15,21 +15,13 @@ public final class Day13 {
 	}
 
 	private static int getSeverity(Map<Integer, Integer> ranges, int delay, boolean part1) {
-		int maxDepth = ranges.keySet()
-			.stream()
-			.mapToInt(depth -> depth)
-			.max()
-			.orElseThrow(IllegalArgumentException::new);
-
 		int severity = 0;
 
-		for (int depth = 0; depth <= maxDepth; depth++) {
-			if (!ranges.containsKey(depth)) {
-				continue;
-			}
+		for (Map.Entry<Integer, Integer> entry : ranges.entrySet()) {
+			int depth = entry.getKey();
+			int range = entry.getValue();
 
 			int time = delay + depth;
-			int range = ranges.get(depth);
 			if (time % ((range - 1) * 2) == 0) {
 				if (part1) {
 					severity += depth * range;
