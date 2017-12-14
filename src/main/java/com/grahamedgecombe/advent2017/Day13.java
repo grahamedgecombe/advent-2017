@@ -11,9 +11,10 @@ public final class Day13 {
 			.map(line -> line.split(": "))
 			.collect(Collectors.toMap(parts -> Integer.parseInt(parts[0]), parts -> Integer.parseInt(parts[1])));
 		System.out.println(getSeverity(ranges));
+		System.out.println(getDelay(ranges));
 	}
 
-	public static int getSeverity(Map<Integer, Integer> ranges) {
+	private static int getSeverity(Map<Integer, Integer> ranges, int delay, boolean part1) {
 		int maxDepth = ranges.keySet()
 			.stream()
 			.mapToInt(depth -> depth)
@@ -27,12 +28,29 @@ public final class Day13 {
 				continue;
 			}
 
+			int time = delay + depth;
 			int range = ranges.get(depth);
-			if (depth % ((range - 1) * 2) == 0) {
-				severity += depth * range;
+			if (time % ((range - 1) * 2) == 0) {
+				if (part1) {
+					severity += depth * range;
+				} else {
+					return 1;
+				}
 			}
 		}
 
 		return severity;
+	}
+
+	public static int getSeverity(Map<Integer, Integer> ranges) {
+		return getSeverity(ranges, 0, true);
+	}
+
+	public static int getDelay(Map<Integer, Integer> ranges) {
+		int delay = 0;
+		while (getSeverity(ranges, delay, false) != 0) {
+			delay++;
+		}
+		return delay;
 	}
 }
