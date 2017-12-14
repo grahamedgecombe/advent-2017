@@ -37,10 +37,45 @@ public final class Day14 {
 		public int count() {
 			return used.cardinality();
 		}
+
+		private void clearRegion(int x, int y) {
+			if (x < 0 || y < 0 || x >= 128 || y >= 128) {
+				return;
+			}
+
+			int index = index(x, y);
+			if (!used.get(index)) {
+				return;
+			}
+
+			used.clear(index);
+
+			clearRegion(x - 1, y);
+			clearRegion(x + 1, y);
+			clearRegion(x, y - 1);
+			clearRegion(x, y + 1);
+		}
+
+		public int countRegions() {
+			int regions = 0;
+
+			for (int y = 0; y < 128; y++) {
+				for (int x = 0; x < 128; x++) {
+					int index = index(x, y);
+					if (used.get(index)) {
+						regions++;
+						clearRegion(x, y);
+					}
+				}
+			}
+
+			return regions;
+		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		Grid grid = Grid.create(AdventUtils.readString("day14.txt"));
 		System.out.println(grid.count());
+		System.out.println(grid.countRegions());
 	}
 }
