@@ -20,15 +20,21 @@ public final class Day15 {
 		}
 		int bValue = Integer.parseInt(matcher.group(1));
 
-		System.out.println(countMatches(aValue, bValue, 40000000));
+		System.out.println(countMatches(aValue, bValue, 40000000, true));
+		System.out.println(countMatches(aValue, bValue, 5000000, false));
 	}
 
-	public static int countMatches(int aValue, int bValue, int pairs) {
+	public static int countMatches(int aValue, int bValue, int pairs, boolean part1) {
 		int count = 0;
 
 		for (int i = 0; i < pairs; i++) {
-			aValue = (int) ((aValue * 16807L) % Integer.MAX_VALUE);
-			bValue = (int) ((bValue * 48271L) % Integer.MAX_VALUE);
+			do {
+				aValue = (int) ((aValue * 16807L) % Integer.MAX_VALUE);
+			} while (!part1 && (aValue & 3) != 0);
+
+			do {
+				bValue = (int) ((bValue * 48271L) % Integer.MAX_VALUE);
+			} while (!part1 && (bValue & 7) != 0);
 
 			if ((aValue & 0xFFFF) == (bValue & 0xFFFF)) {
 				count++;
