@@ -1,6 +1,7 @@
 package com.grahamedgecombe.advent2017;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,34 +12,47 @@ public final class Day16 {
 
 	public static void main(String[] args) throws IOException {
 		List<String> moves = Arrays.asList(AdventUtils.readString("day16.txt").split(","));
-		System.out.println(dance("abcdefghijklmnop", moves));
+		System.out.println(dance("abcdefghijklmnop", moves, 1));
+		System.out.println(dance("abcdefghijklmnop", moves, 1000000000));
 	}
 
-	public static String dance(String in, List<String> moves) {
+	public static String dance(String in, List<String> moves, int iterations) {
 		char[] chars = in.toCharArray();
 
-		for (String move : moves) {
-			Matcher matcher = PATTERN.matcher(move);
-			if (!matcher.matches()) {
-				throw new IllegalArgumentException();
-			}
+		List<String> states = new ArrayList<>();
+		states.add(in);
 
-			switch (matcher.group(1)) {
-				case "s":
-					spin(chars, Integer.parseInt(matcher.group(2)));
-					break;
-
-				case "x":
-					partner(chars, Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)));
-					break;
-
-				case "p":
-					exchange(chars, matcher.group(2).charAt(0), matcher.group(3).charAt(0));
-					break;
-
-				default:
+		for (int i = 0; i < iterations; i++) {
+			for (String move : moves) {
+				Matcher matcher = PATTERN.matcher(move);
+				if (!matcher.matches()) {
 					throw new IllegalArgumentException();
+				}
+
+				switch (matcher.group(1)) {
+					case "s":
+						spin(chars, Integer.parseInt(matcher.group(2)));
+						break;
+
+					case "x":
+						partner(chars, Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)));
+						break;
+
+					case "p":
+						exchange(chars, matcher.group(2).charAt(0), matcher.group(3).charAt(0));
+						break;
+
+					default:
+						throw new IllegalArgumentException();
+				}
 			}
+
+			String state = new String(chars);
+			if (state.equals(in)) {
+				return states.get(iterations % states.size());
+			}
+
+			states.add(state);
 		}
 
 		return new String(chars);
