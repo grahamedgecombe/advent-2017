@@ -1,6 +1,7 @@
 package com.grahamedgecombe.advent2017;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public final class Day18Test {
 	@Test
 	public void testPart1() {
-		Day18.Machine machine = Day18.Machine.create(Arrays.asList(
+		List<Day18.Instruction> instructions = Day18.parse(Arrays.asList(
 			"set a 1",
 			"add a 2",
 			"mul a a",
@@ -21,6 +22,20 @@ public final class Day18Test {
 			"set a 1",
 			"jgz a -2"
 		));
-		assertEquals(4, machine.run());
+		assertEquals(4, Day18.runPart1(instructions));
+	}
+
+	@Test
+	public void testPart2() {
+		List<Day18.Instruction> instructions = Day18.parse(Arrays.asList(
+			"snd 1",
+			"snd 2",
+			"snd p",
+			"rcv a",
+			"rcv b",
+			"rcv c",
+			"rcv d"
+		));
+		assertEquals(3, Day18.runPart2(instructions));
 	}
 }
