@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Day18 {
-	public static final Pattern PATTERN = Pattern.compile("^(snd|set|add|mul|mod|rcv|jgz) ([a-z]|(?:[0-9-]+))(?: ([a-z]|(?:[0-9-]+)))?$");
+	private static final Pattern PATTERN = Pattern.compile("^(snd|set|add|mul|mod|rcv|jgz) ([a-z]|(?:[0-9-]+))(?: ([a-z]|(?:[0-9-]+)))?$");
 
 	private enum Opcode {
 		SND,
