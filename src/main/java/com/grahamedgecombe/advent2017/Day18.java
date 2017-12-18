@@ -98,7 +98,7 @@ public final class Day18 {
 
 			switch (instruction.opcode) {
 				case SND:
-					out.add(registers[instruction.operand1]);
+					out.add(operand1);
 					sends++;
 					break;
 				case SET:
