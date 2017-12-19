@@ -32,13 +32,34 @@ public final class Day19 {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		String[] grid = AdventUtils.readLines("day19.txt").toArray(new String[0]);
-		System.out.println(getPath(grid));
+	public static final class Path {
+		private final String letters;
+		private final int steps;
+
+		public Path(String letters, int steps) {
+			this.letters = letters;
+			this.steps = steps;
+		}
+
+		public String getLetters() {
+			return letters;
+		}
+
+		public int getSteps() {
+			return steps;
+		}
 	}
 
-	public static String getPath(String[] grid) {
-		StringBuilder path = new StringBuilder();
+	public static void main(String[] args) throws IOException {
+		String[] grid = AdventUtils.readLines("day19.txt").toArray(new String[0]);
+		Path path = getPath(grid);
+		System.out.println(path.letters);
+		System.out.println(path.steps);
+	}
+
+	public static Path getPath(String[] grid) {
+		StringBuilder letters = new StringBuilder();
+		int steps = 0;
 
 		int startX = -1;
 		for (int x = 0; x < grid[0].length(); x++) {
@@ -59,7 +80,7 @@ public final class Day19 {
 			char tile = grid[y].charAt(x);
 
 			if (tile >= 'A' && tile <= 'Z') {
-				path.append(tile);
+				letters.append(tile);
 			} else if (tile == '+') {
 				for (Direction d : Direction.values()) {
 					if (direction == d.opposite()) {
@@ -82,8 +103,9 @@ public final class Day19 {
 
 			x += direction.dx;
 			y += direction.dy;
+			steps++;
 		}
 
-		return path.toString();
+		return new Path(letters.toString(), steps);
 	}
 }
