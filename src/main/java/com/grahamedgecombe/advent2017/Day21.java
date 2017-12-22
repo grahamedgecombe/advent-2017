@@ -184,5 +184,6 @@ public final class Day21 {
 	public static void main(String[] args) throws IOException {
 		Map<Grid, Grid> rules = Grid.createRules(AdventUtils.readLines("day21.txt"));
 		System.out.println(Grid.INITIAL_PATTERN.transform(rules, 5).count());
+		System.out.println(Grid.INITIAL_PATTERN.transform(rules, 18).count());
 	}
 }
