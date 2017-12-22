@@ -1,8 +1,10 @@
 package com.grahamedgecombe.advent2017;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -86,6 +88,33 @@ public final class Day22 {
 					throw new IllegalArgumentException();
 			}
 		}
+
+		public Direction reverse() {
+			switch (this) {
+				case NORTH:
+					return SOUTH;
+				case EAST:
+					return WEST;
+				case SOUTH:
+					return NORTH;
+				case WEST:
+					return EAST;
+				default:
+					throw new IllegalArgumentException();
+			}
+		}
+	}
+
+	private enum State {
+		CLEAN,
+		WEAKENED,
+		INFECTED,
+		FLAGGED;
+
+		public State next() {
+			State[] states = values();
+			return states[(ordinal() + 1) % states.length];
+		}
 	}
 
 	public static Set<Position> parseMap(List<String> lines) {
@@ -103,7 +132,7 @@ public final class Day22 {
 		return infectedPositions;
 	}
 
-	public static int countBursts(Set<Position> infectedPositions, int bursts) {
+	public static int countBurstsPart1(Set<Position> infectedPositions, int bursts) {
 		infectedPositions = new HashSet<>(infectedPositions);
 
 		Position position = Position.ORIGIN;
@@ -128,8 +157,53 @@ public final class Day22 {
 		return infectedBursts;
 	}
 
+	public static int countBurstsPart2(Set<Position> infectedPositions, int bursts) {
+		Map<Position, State> states = new HashMap<>();
+		for (Position position : infectedPositions) {
+			states.put(position, State.INFECTED);
+		}
+
+		Position position = Position.ORIGIN;
+		Direction direction = Direction.NORTH;
+		int infectedBursts = 0;
+
+		for (int i = 0; i < bursts; i++) {
+			State state = states.get(position);
+			if (state == null) {
+				state = State.CLEAN;
+			}
+
+			switch (state) {
+				case CLEAN:
+					direction = direction.left();
+					break;
+				case WEAKENED:
+					infectedBursts++;
+					break;
+				case INFECTED:
+					direction = direction.right();
+					break;
+				case FLAGGED:
+					direction = direction.reverse();
+					break;
+			}
+
+			state = state.next();
+			if (state == State.CLEAN) {
+				states.remove(position);
+			} else {
+				states.put(position, state);
+			}
+
+			position = position.forward(direction);
+		}
+
+		return infectedBursts;
+	}
+
 	public static void main(String[] args) throws IOException {
 		Set<Position> infectedPositions = parseMap(AdventUtils.readLines("day22.txt"));
-		System.out.println(countBursts(infectedPositions, 10000));
+		System.out.println(countBurstsPart1(infectedPositions, 10000));
+		System.out.println(countBurstsPart2(infectedPositions, 10000000));
 	}
 }
