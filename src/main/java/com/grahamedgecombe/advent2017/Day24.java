@@ -44,11 +44,48 @@ public final class Day24 {
 	}
 
 	public static int getStrongestBridge(List<Port> ports) {
-		return getStrongestBridge(ports, 0);
+		return getBridge(ports, 0, true).strength;
 	}
 
-	private static int getStrongestBridge(List<Port> ports, int pins) {
-		int maxStrength = 0;
+	public static int getLongestBridgeStrength(List<Port> ports) {
+		return getBridge(ports, 0, false).strength;
+	}
+
+	private static class Bridge {
+		private static final Bridge EMPTY = new Bridge(0, 0);
+
+		public static Bridge best(Bridge b1, Bridge b2, boolean part1) {
+			if (part1) {
+				if (b1.strength >= b2.strength) {
+					return b1;
+				} else {
+					return b2;
+				}
+			} else {
+				if (b1.length > b2.length) {
+					return b1;
+				} else if (b2.length > b1.length) {
+					return b2;
+				} else {
+					return best(b1, b2, true);
+				}
+			}
+		}
+
+		private final int length, strength;
+
+		private Bridge(int length, int strength) {
+			this.length = length;
+			this.strength = strength;
+		}
+
+		public Bridge extend(Port port) {
+			return new Bridge(length + 1, strength + port.pins1 + port.pins2);
+		}
+	}
+
+	private static Bridge getBridge(List<Port> ports, int pins, boolean part1) {
+		Bridge best = Bridge.EMPTY;
 
 		for (int i = 0; i < ports.size(); i++) {
 			Port port = ports.get(i);
@@ -58,15 +95,22 @@ public final class Day24 {
 
 			List<Port> nextPorts = take(ports, i);
 			int nextPins = port.pins1 == pins ? port.pins2 : port.pins1;
-			int strength = getStrongestBridge(nextPorts, nextPins) + port.pins1 + port.pins2;
 
-			maxStrength = Math.max(maxStrength, strength);
+			Bridge bridge = getBridge(nextPorts, nextPins, part1).extend(port);
+
+			if (best == null) {
+				best = bridge;
+			} else {
+				best = Bridge.best(best, bridge, part1);
+			}
 		}
 
-		return maxStrength;
+		return best;
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(getStrongestBridge(Port.parse(AdventUtils.readLines("day24.txt"))));
+		List<Port> ports = Port.parse(AdventUtils.readLines("day24.txt"));
+		System.out.println(getStrongestBridge(ports));
+		System.out.println(getLongestBridgeStrength(ports));
 	}
 }
