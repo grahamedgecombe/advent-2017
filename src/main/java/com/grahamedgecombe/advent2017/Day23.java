@@ -79,12 +79,32 @@ public final class Day23 {
 			this.instructions = instructions;
 		}
 
-		public int run() {
+		private boolean prime(long n) {
+			for (long i = 2; i <= n / 2; i++) {
+				if (n % i == 0) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private long run(boolean part1) {
 			int pc = 0;
 			int multiplications = 0;
 			long[] registers = new long[8];
 
+			if (!part1) {
+				registers[0] = 1;
+			}
+
 			while (pc >= 0 && pc < instructions.size()) {
+				if (!part1 && pc == 8) {
+					registers[5] = prime(registers[1]) ? 1 : 0;
+					pc = 24;
+					continue;
+				}
+
 				Instruction instruction = instructions.get(pc);
 
 				long operand1 = instruction.immediate1 ? instruction.operand1 : registers[instruction.operand1];
@@ -113,12 +133,21 @@ public final class Day23 {
 				pc++;
 			}
 
-			return multiplications;
+			return part1 ? multiplications : registers[7];
+		}
+
+		public long runPart1() {
+			return run(true);
+		}
+
+		public long runPart2() {
+			return run(false);
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		Machine machine = Machine.create(AdventUtils.readLines("day23.txt"));
-		System.out.println(machine.run());
+		System.out.println(machine.runPart1());
+		System.out.println(machine.runPart2());
 	}
 }
